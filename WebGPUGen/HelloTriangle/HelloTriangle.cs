@@ -20,7 +20,7 @@ namespace HelloTriangle
         private WGPUSurface Surface;
         private WGPUAdapter Adapter;
         private WGPUAdapterInfo AdapterInfo;
-        private WGPUSupportedLimits AdapterLimits;
+        private WGPULimits AdapterLimits;
         private WGPUDevice Device;
         private WGPUTextureFormat SwapChainFormat;
         private WGPUQueue Queue;
@@ -67,11 +67,11 @@ namespace HelloTriangle
             };
             Instance = wgpuCreateInstance(&instanceDescriptor);
 
-            WGPUSurfaceDescriptorFromWindowsHWND windowsSurface = new WGPUSurfaceDescriptorFromWindowsHWND()
+            WGPUSurfaceSourceWindowsHWND windowsSurface = new WGPUSurfaceSourceWindowsHWND()
             {
                 chain = new WGPUChainedStruct()
                 {
-                    sType = WGPUSType.SurfaceDescriptorFromWindowsHWND,
+                    sType = WGPUSType.SurfaceSourceWindowsHWND,
                 },
                 hinstance = (void*)Process.GetCurrentProcess().Handle,
                 hwnd = (void*)window.Handle,
@@ -92,12 +92,21 @@ namespace HelloTriangle
             };
 
             WGPUAdapter adapter = WGPUAdapter.Null;
-            wgpuInstanceRequestAdapter(Instance, &options, &OnAdapterRequestEnded, &adapter);
+
+            var adapterCallbackInfo = new WGPURequestAdapterCallbackInfo()
+            {
+                mode = WGPUCallbackMode.AllowProcessEvents,
+                callback = &OnAdapterRequestEnded,
+                userdata1 = &adapter,
+                userdata2 = null,
+            };
+            
+            wgpuInstanceRequestAdapter(Instance, &options, adapterCallbackInfo);
             WGPUAdapterInfo properties;
             wgpuAdapterGetInfo(adapter, &properties);
             window.Text = $"WGPU-Native Triangle ({properties.backendType})";
 
-            WGPUSupportedLimits limits;
+            WGPULimits limits;
             wgpuAdapterGetLimits(adapter, &limits);
             this.Adapter = adapter;
 
@@ -108,7 +117,7 @@ namespace HelloTriangle
             WGPUDeviceDescriptor deviceDescriptor = new WGPUDeviceDescriptor()
             {
                 nextInChain = null,
-                label = null,
+                label = "".ToStringView(),
                 requiredFeatures = null,
                 requiredFeatureCount = 0,
                 requiredLimits = null,
@@ -119,7 +128,14 @@ namespace HelloTriangle
             };
 
             WGPUDevice device = WGPUDevice.Null;
-            wgpuAdapterRequestDevice(Adapter, &deviceDescriptor, &OnDeviceRequestEnded, &device);
+            var deviceCallbackInfo = new WGPURequestDeviceCallbackInfo()
+            {
+                mode = WGPUCallbackMode.AllowProcessEvents,
+                callback = &OnDeviceRequestEnded,
+                userdata1 = &device,
+                userdata2 = null,
+            };
+            wgpuAdapterRequestDevice(Adapter, &deviceDescriptor, deviceCallbackInfo);
             Device = device;
 
             Queue = wgpuDeviceGetQueue(Device);
@@ -147,17 +163,17 @@ namespace HelloTriangle
         }
 
         [UnmanagedCallersOnly]
-        private static void HandleUncapturedErrorCallback(WGPUErrorType type, char* pMessage, void* pUserData)
+        private static void HandleUncapturedErrorCallback(WGPUDevice* device, WGPUErrorType type, WGPUStringView message, void* pUserData1, void* pUserData2)
         {
-            Console.WriteLine($"Uncaptured device error: type: {type} ({Helpers.GetString(pMessage)})");
+            Console.WriteLine($"Uncaptured device error: type: {type} ({Helpers.GetString(message)})");
         }
 
         [UnmanagedCallersOnly]
-        private static void OnAdapterRequestEnded(WGPURequestAdapterStatus status, WGPUAdapter candidateAdapter, char* message, void* pUserData)
+        private static void OnAdapterRequestEnded(WGPURequestAdapterStatus status, WGPUAdapter candidateAdapter, WGPUStringView message, void* pUserData1, void* pUserData2)
         {
             if (status == WGPURequestAdapterStatus.Success)
             {
-                *(WGPUAdapter*)pUserData = candidateAdapter;
+                *(WGPUAdapter*)pUserData1 = candidateAdapter;
             }
             else
             {
@@ -166,11 +182,11 @@ namespace HelloTriangle
         }
 
         [UnmanagedCallersOnly]
-        private static void OnDeviceRequestEnded(WGPURequestDeviceStatus status, WGPUDevice device, char* message, void* pUserData)
+        private static void OnDeviceRequestEnded(WGPURequestDeviceStatus status, WGPUDevice device, WGPUStringView message, void* pUserData1, void* pUserData2)
         {
             if (status == WGPURequestDeviceStatus.Success)
             {
-                *(WGPUDevice*)pUserData = device;
+                *(WGPUDevice*)pUserData1 = device;
             }
             else
             {
@@ -191,21 +207,19 @@ namespace HelloTriangle
 
             string shaderSource = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Content", $"triangle.wgsl"));
 
-            WGPUShaderModuleWGSLDescriptor shaderCodeDescriptor = new()
+            WGPUShaderSourceWGSL shaderCodeDescriptor = new()
             {
                 chain = new WGPUChainedStruct()
                 {
                     next = null,
-                    sType = WGPUSType.ShaderModuleWGSLDescriptor,
+                    sType = WGPUSType.ShaderSourceWGSL,
                 },
-                code = shaderSource.ToPointer(),
+                code = shaderSource.ToStringView(),
             };
 
             WGPUShaderModuleDescriptor moduleDescriptor = new()
             {
                 nextInChain = &shaderCodeDescriptor.chain,
-                hintCount = 0,
-                hints = null,
             };
 
             WGPUShaderModule shaderModule = wgpuDeviceCreateShaderModule(Device, &moduleDescriptor);
@@ -262,7 +276,7 @@ namespace HelloTriangle
             {
                 nextInChain = null,
                 module = shaderModule,
-                entryPoint = "fragmentMain".ToPointer(),
+                entryPoint = "fragmentMain".ToStringView(),
                 constantCount = 0,
                 constants = null,
                 targetCount = 1,
@@ -278,7 +292,7 @@ namespace HelloTriangle
                     buffers = &vertexLayout,
 
                     module = shaderModule,
-                    entryPoint = "vertexMain".ToPointer(),
+                    entryPoint = "vertexMain".ToStringView(),
                     constantCount = 0,
                     constants = null,
                 },

@@ -4,18 +4,19 @@ namespace Evergine.Bindings.WebGPU
 {
 	public enum WGPUAdapterType
 	{
-		DiscreteGPU = 0,
-		IntegratedGPU = 1,
-		CPU = 2,
-		Unknown = 3,
+		DiscreteGPU = 1,
+		IntegratedGPU = 2,
+		CPU = 3,
+		Unknown = 4,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUAddressMode
 	{
-		Repeat = 0,
-		MirrorRepeat = 1,
-		ClampToEdge = 2,
+		Undefined = 0,
+		ClampToEdge = 1,
+		Repeat = 2,
+		MirrorRepeat = 3,
 		Force32 = 2147483647,
 	}
 
@@ -35,60 +36,61 @@ namespace Evergine.Bindings.WebGPU
 
 	public enum WGPUBlendFactor
 	{
-		Zero = 0,
-		One = 1,
-		Src = 2,
-		OneMinusSrc = 3,
-		SrcAlpha = 4,
-		OneMinusSrcAlpha = 5,
-		Dst = 6,
-		OneMinusDst = 7,
-		DstAlpha = 8,
-		OneMinusDstAlpha = 9,
-		SrcAlphaSaturated = 10,
-		Constant = 11,
-		OneMinusConstant = 12,
+		Undefined = 0,
+		Zero = 1,
+		One = 2,
+		Src = 3,
+		OneMinusSrc = 4,
+		SrcAlpha = 5,
+		OneMinusSrcAlpha = 6,
+		Dst = 7,
+		OneMinusDst = 8,
+		DstAlpha = 9,
+		OneMinusDstAlpha = 10,
+		SrcAlphaSaturated = 11,
+		Constant = 12,
+		OneMinusConstant = 13,
+		Src1 = 14,
+		OneMinusSrc1 = 15,
+		Src1Alpha = 16,
+		OneMinusSrc1Alpha = 17,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUBlendOperation
 	{
-		Add = 0,
-		Subtract = 1,
-		ReverseSubtract = 2,
-		Min = 3,
-		Max = 4,
+		Undefined = 0,
+		Add = 1,
+		Subtract = 2,
+		ReverseSubtract = 3,
+		Min = 4,
+		Max = 5,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUBufferBindingType
 	{
-		Undefined = 0,
-		Uniform = 1,
-		Storage = 2,
-		ReadOnlyStorage = 3,
-		Force32 = 2147483647,
-	}
-
-	public enum WGPUBufferMapAsyncStatus
-	{
-		Success = 0,
-		ValidationError = 1,
-		Unknown = 2,
-		DeviceLost = 3,
-		DestroyedBeforeCallback = 4,
-		UnmappedBeforeCallback = 5,
-		MappingAlreadyPending = 6,
-		OffsetOutOfRange = 7,
-		SizeOutOfRange = 8,
+		BindingNotUsed = 0,
+		Undefined = 1,
+		Uniform = 2,
+		Storage = 3,
+		ReadOnlyStorage = 4,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUBufferMapState
 	{
-		Unmapped = 0,
-		Pending = 1,
-		Mapped = 2,
+		Unmapped = 1,
+		Pending = 2,
+		Mapped = 3,
+		Force32 = 2147483647,
+	}
+
+	public enum WGPUCallbackMode
+	{
+		WaitAnyOnly = 1,
+		AllowProcessEvents = 2,
+		AllowSpontaneous = 3,
 		Force32 = 2147483647,
 	}
 
@@ -97,29 +99,29 @@ namespace Evergine.Bindings.WebGPU
 		Undefined = 0,
 		Never = 1,
 		Less = 2,
-		LessEqual = 3,
-		Greater = 4,
-		GreaterEqual = 5,
-		Equal = 6,
-		NotEqual = 7,
+		Equal = 3,
+		LessEqual = 4,
+		Greater = 5,
+		NotEqual = 6,
+		GreaterEqual = 7,
 		Always = 8,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUCompilationInfoRequestStatus
 	{
-		Success = 0,
-		Error = 1,
-		DeviceLost = 2,
-		Unknown = 3,
+		Success = 1,
+		InstanceDropped = 2,
+		Error = 3,
+		Unknown = 4,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUCompilationMessageType
 	{
-		Error = 0,
-		Warning = 1,
-		Info = 2,
+		Error = 1,
+		Warning = 2,
+		Info = 3,
 		Force32 = 2147483647,
 	}
 
@@ -135,20 +137,20 @@ namespace Evergine.Bindings.WebGPU
 
 	public enum WGPUCreatePipelineAsyncStatus
 	{
-		Success = 0,
-		ValidationError = 1,
-		InternalError = 2,
-		DeviceLost = 3,
-		DeviceDestroyed = 4,
+		Success = 1,
+		InstanceDropped = 2,
+		ValidationError = 3,
+		InternalError = 4,
 		Unknown = 5,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUCullMode
 	{
-		None = 0,
-		Front = 1,
-		Back = 2,
+		Undefined = 0,
+		None = 1,
+		Front = 2,
+		Back = 3,
 		Force32 = 2147483647,
 	}
 
@@ -156,25 +158,33 @@ namespace Evergine.Bindings.WebGPU
 	{
 		Unknown = 1,
 		Destroyed = 2,
+		InstanceDropped = 3,
+		FailedCreation = 4,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUErrorFilter
 	{
-		Validation = 0,
-		OutOfMemory = 1,
-		Internal = 2,
+		Validation = 1,
+		OutOfMemory = 2,
+		Internal = 3,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUErrorType
 	{
-		NoError = 0,
-		Validation = 1,
-		OutOfMemory = 2,
-		Internal = 3,
-		Unknown = 4,
-		DeviceLost = 5,
+		NoError = 1,
+		Validation = 2,
+		OutOfMemory = 3,
+		Internal = 4,
+		Unknown = 5,
+		Force32 = 2147483647,
+	}
+
+	public enum WGPUFeatureLevel
+	{
+		Compatibility = 1,
+		Core = 2,
 		Force32 = 2147483647,
 	}
 
@@ -185,27 +195,34 @@ namespace Evergine.Bindings.WebGPU
 		Depth32FloatStencil8 = 2,
 		TimestampQuery = 3,
 		TextureCompressionBC = 4,
-		TextureCompressionETC2 = 5,
-		TextureCompressionASTC = 6,
-		IndirectFirstInstance = 7,
-		ShaderF16 = 8,
-		RG11B10UfloatRenderable = 9,
-		BGRA8UnormStorage = 10,
-		Float32Filterable = 11,
+		TextureCompressionBCSliced3D = 5,
+		TextureCompressionETC2 = 6,
+		TextureCompressionASTC = 7,
+		TextureCompressionASTCSliced3D = 8,
+		IndirectFirstInstance = 9,
+		ShaderF16 = 10,
+		RG11B10UfloatRenderable = 11,
+		BGRA8UnormStorage = 12,
+		Float32Filterable = 13,
+		Float32Blendable = 14,
+		ClipDistances = 15,
+		DualSourceBlending = 16,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUFilterMode
 	{
-		Nearest = 0,
-		Linear = 1,
+		Undefined = 0,
+		Nearest = 1,
+		Linear = 2,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUFrontFace
 	{
-		CCW = 0,
-		CW = 1,
+		Undefined = 0,
+		CCW = 1,
+		CW = 2,
 		Force32 = 2147483647,
 	}
 
@@ -220,15 +237,42 @@ namespace Evergine.Bindings.WebGPU
 	public enum WGPULoadOp
 	{
 		Undefined = 0,
-		Clear = 1,
-		Load = 2,
+		Load = 1,
+		Clear = 2,
+		Force32 = 2147483647,
+	}
+
+	public enum WGPUMapAsyncStatus
+	{
+		Success = 1,
+		InstanceDropped = 2,
+		Error = 3,
+		Aborted = 4,
+		Unknown = 5,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUMipmapFilterMode
 	{
-		Nearest = 0,
-		Linear = 1,
+		Undefined = 0,
+		Nearest = 1,
+		Linear = 2,
+		Force32 = 2147483647,
+	}
+
+	public enum WGPUOptionalBool
+	{
+		False = 0,
+		True = 1,
+		Undefined = 2,
+		Force32 = 2147483647,
+	}
+
+	public enum WGPUPopErrorScopeStatus
+	{
+		Success = 1,
+		InstanceDropped = 2,
+		EmptyStack = 3,
 		Force32 = 2147483647,
 	}
 
@@ -242,101 +286,112 @@ namespace Evergine.Bindings.WebGPU
 
 	public enum WGPUPresentMode
 	{
-		Fifo = 0,
-		FifoRelaxed = 1,
-		Immediate = 2,
-		Mailbox = 3,
+		Undefined = 0,
+		Fifo = 1,
+		FifoRelaxed = 2,
+		Immediate = 3,
+		Mailbox = 4,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUPrimitiveTopology
 	{
-		PointList = 0,
-		LineList = 1,
-		LineStrip = 2,
-		TriangleList = 3,
-		TriangleStrip = 4,
+		Undefined = 0,
+		PointList = 1,
+		LineList = 2,
+		LineStrip = 3,
+		TriangleList = 4,
+		TriangleStrip = 5,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUQueryType
 	{
-		Occlusion = 0,
-		Timestamp = 1,
+		Occlusion = 1,
+		Timestamp = 2,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUQueueWorkDoneStatus
 	{
-		Success = 0,
-		Error = 1,
-		Unknown = 2,
-		DeviceLost = 3,
+		Success = 1,
+		InstanceDropped = 2,
+		Error = 3,
+		Unknown = 4,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPURequestAdapterStatus
 	{
-		Success = 0,
-		Unavailable = 1,
-		Error = 2,
-		Unknown = 3,
+		Success = 1,
+		InstanceDropped = 2,
+		Unavailable = 3,
+		Error = 4,
+		Unknown = 5,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPURequestDeviceStatus
 	{
-		Success = 0,
-		Error = 1,
-		Unknown = 2,
+		Success = 1,
+		InstanceDropped = 2,
+		Error = 3,
+		Unknown = 4,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUSType
 	{
-		Invalid = 0,
-		SurfaceDescriptorFromMetalLayer = 1,
-		SurfaceDescriptorFromWindowsHWND = 2,
-		SurfaceDescriptorFromXlibWindow = 3,
-		SurfaceDescriptorFromCanvasHTMLSelector = 4,
-		ShaderModuleSPIRVDescriptor = 5,
-		ShaderModuleWGSLDescriptor = 6,
-		PrimitiveDepthClipControl = 7,
-		SurfaceDescriptorFromWaylandSurface = 8,
-		SurfaceDescriptorFromAndroidNativeWindow = 9,
-		SurfaceDescriptorFromXcbWindow = 10,
-		RenderPassDescriptorMaxDrawCount = 15,
+		ShaderSourceSPIRV = 1,
+		ShaderSourceWGSL = 2,
+		RenderPassMaxDrawCount = 3,
+		SurfaceSourceMetalLayer = 4,
+		SurfaceSourceWindowsHWND = 5,
+		SurfaceSourceXlibWindow = 6,
+		SurfaceSourceWaylandSurface = 7,
+		SurfaceSourceAndroidNativeWindow = 8,
+		SurfaceSourceXCBWindow = 9,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUSamplerBindingType
 	{
-		Undefined = 0,
-		Filtering = 1,
-		NonFiltering = 2,
-		Comparison = 3,
+		BindingNotUsed = 0,
+		Undefined = 1,
+		Filtering = 2,
+		NonFiltering = 3,
+		Comparison = 4,
+		Force32 = 2147483647,
+	}
+
+	public enum WGPUStatus
+	{
+		Success = 1,
+		Error = 2,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUStencilOperation
 	{
-		Keep = 0,
-		Zero = 1,
-		Replace = 2,
-		Invert = 3,
-		IncrementClamp = 4,
-		DecrementClamp = 5,
-		IncrementWrap = 6,
-		DecrementWrap = 7,
+		Undefined = 0,
+		Keep = 1,
+		Zero = 2,
+		Replace = 3,
+		Invert = 4,
+		IncrementClamp = 5,
+		DecrementClamp = 6,
+		IncrementWrap = 7,
+		DecrementWrap = 8,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUStorageTextureAccess
 	{
-		Undefined = 0,
-		WriteOnly = 1,
-		ReadOnly = 2,
-		ReadWrite = 3,
+		BindingNotUsed = 0,
+		Undefined = 1,
+		WriteOnly = 2,
+		ReadOnly = 3,
+		ReadWrite = 4,
 		Force32 = 2147483647,
 	}
 
@@ -350,28 +405,32 @@ namespace Evergine.Bindings.WebGPU
 
 	public enum WGPUSurfaceGetCurrentTextureStatus
 	{
-		Success = 0,
-		Timeout = 1,
-		Outdated = 2,
-		Lost = 3,
-		OutOfMemory = 4,
-		DeviceLost = 5,
+		SuccessOptimal = 1,
+		SuccessSuboptimal = 2,
+		Timeout = 3,
+		Outdated = 4,
+		Lost = 5,
+		OutOfMemory = 6,
+		DeviceLost = 7,
+		Error = 8,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUTextureAspect
 	{
-		All = 0,
-		StencilOnly = 1,
-		DepthOnly = 2,
+		Undefined = 0,
+		All = 1,
+		StencilOnly = 2,
+		DepthOnly = 3,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUTextureDimension
 	{
-		_1D = 0,
-		_2D = 1,
-		_3D = 2,
+		Undefined = 0,
+		_1D = 1,
+		_2D = 2,
+		_3D = 3,
 		Force32 = 2147483647,
 	}
 
@@ -478,12 +537,13 @@ namespace Evergine.Bindings.WebGPU
 
 	public enum WGPUTextureSampleType
 	{
-		Undefined = 0,
-		Float = 1,
-		UnfilterableFloat = 2,
-		Depth = 3,
-		Sint = 4,
-		Uint = 5,
+		BindingNotUsed = 0,
+		Undefined = 1,
+		Float = 2,
+		UnfilterableFloat = 3,
+		Depth = 4,
+		Sint = 5,
+		Uint = 6,
 		Force32 = 2147483647,
 	}
 
@@ -501,51 +561,61 @@ namespace Evergine.Bindings.WebGPU
 
 	public enum WGPUVertexFormat
 	{
-		Undefined = 0,
-		Uint8x2 = 1,
-		Uint8x4 = 2,
-		Sint8x2 = 3,
-		Sint8x4 = 4,
-		Unorm8x2 = 5,
-		Unorm8x4 = 6,
-		Snorm8x2 = 7,
-		Snorm8x4 = 8,
-		Uint16x2 = 9,
-		Uint16x4 = 10,
-		Sint16x2 = 11,
-		Sint16x4 = 12,
-		Unorm16x2 = 13,
-		Unorm16x4 = 14,
-		Snorm16x2 = 15,
-		Snorm16x4 = 16,
-		Float16x2 = 17,
-		Float16x4 = 18,
-		Float32 = 19,
-		Float32x2 = 20,
-		Float32x3 = 21,
-		Float32x4 = 22,
-		Uint32 = 23,
-		Uint32x2 = 24,
-		Uint32x3 = 25,
-		Uint32x4 = 26,
-		Sint32 = 27,
-		Sint32x2 = 28,
-		Sint32x3 = 29,
-		Sint32x4 = 30,
+		Uint8 = 1,
+		Uint8x2 = 2,
+		Uint8x4 = 3,
+		Sint8 = 4,
+		Sint8x2 = 5,
+		Sint8x4 = 6,
+		Unorm8 = 7,
+		Unorm8x2 = 8,
+		Unorm8x4 = 9,
+		Snorm8 = 10,
+		Snorm8x2 = 11,
+		Snorm8x4 = 12,
+		Uint16 = 13,
+		Uint16x2 = 14,
+		Uint16x4 = 15,
+		Sint16 = 16,
+		Sint16x2 = 17,
+		Sint16x4 = 18,
+		Unorm16 = 19,
+		Unorm16x2 = 20,
+		Unorm16x4 = 21,
+		Snorm16 = 22,
+		Snorm16x2 = 23,
+		Snorm16x4 = 24,
+		Float16 = 25,
+		Float16x2 = 26,
+		Float16x4 = 27,
+		Float32 = 28,
+		Float32x2 = 29,
+		Float32x3 = 30,
+		Float32x4 = 31,
+		Uint32 = 32,
+		Uint32x2 = 33,
+		Uint32x3 = 34,
+		Uint32x4 = 35,
+		Sint32 = 36,
+		Sint32x2 = 37,
+		Sint32x3 = 38,
+		Sint32x4 = 39,
+		Unorm10 = 40,
+		Unorm8x4BGRA = 41,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUVertexStepMode
 	{
-		Vertex = 0,
-		Instance = 1,
-		VertexBufferNotUsed = 2,
+		VertexBufferNotUsed = 0,
+		Undefined = 1,
+		Vertex = 2,
+		Instance = 3,
 		Force32 = 2147483647,
 	}
 
-	public enum WGPUWGSLFeatureName
+	public enum WGPUWGSLLanguageFeatureName
 	{
-		Undefined = 0,
 		ReadonlyAndReadwriteStorageTextures = 1,
 		Packed4x8IntegerDotProduct = 2,
 		UnrestrictedPointerParameters = 3,
@@ -553,73 +623,22 @@ namespace Evergine.Bindings.WebGPU
 		Force32 = 2147483647,
 	}
 
-	[Flags]
-	public enum WGPUBufferUsage
+	public enum WGPUWaitStatus
 	{
-		None = 0,
-		MapRead = 1,
-		MapWrite = 2,
-		CopySrc = 4,
-		CopyDst = 8,
-		Index = 16,
-		Vertex = 32,
-		Uniform = 64,
-		Storage = 128,
-		Indirect = 256,
-		QueryResolve = 512,
-		Force32 = 2147483647,
-	}
-
-	[Flags]
-	public enum WGPUColorWriteMask
-	{
-		None = 0,
-		Red = 1,
-		Green = 2,
-		Blue = 4,
-		Alpha = 8,
-		All = 15,
-		Force32 = 2147483647,
-	}
-
-	[Flags]
-	public enum WGPUMapMode
-	{
-		None = 0,
-		Read = 1,
-		Write = 2,
-		Force32 = 2147483647,
-	}
-
-	[Flags]
-	public enum WGPUShaderStage
-	{
-		None = 0,
-		Vertex = 1,
-		Fragment = 2,
-		Compute = 4,
-		Force32 = 2147483647,
-	}
-
-	[Flags]
-	public enum WGPUTextureUsage
-	{
-		None = 0,
-		CopySrc = 1,
-		CopyDst = 2,
-		TextureBinding = 4,
-		StorageBinding = 8,
-		RenderAttachment = 16,
+		Success = 1,
+		TimedOut = 2,
+		UnsupportedTimeout = 3,
+		UnsupportedCount = 4,
+		UnsupportedMixedSources = 5,
 		Force32 = 2147483647,
 	}
 
 	public enum WGPUNativeSType
 	{
 		DeviceExtras = 196609,
-		RequiredLimitsExtras = 196610,
+		NativeLimits = 196610,
 		PipelineLayoutExtras = 196611,
 		ShaderModuleGLSLDescriptor = 196612,
-		SupportedLimitsExtras = 196613,
 		InstanceExtras = 196614,
 		BindGroupEntryExtras = 196615,
 		BindGroupLayoutEntryExtras = 196616,
@@ -645,6 +664,7 @@ namespace Evergine.Bindings.WebGPU
 		MappablePrimaryBuffers = 196622,
 		BufferBindingArray = 196623,
 		UniformBufferAndStorageTextureArrayNonUniformIndexing = 196624,
+		SpirvShaderPassthrough = 196631,
 		VertexAttribute64bit = 196633,
 		TextureFormatNv12 = 196634,
 		RayTracingAccelerationStructure = 196635,
@@ -653,6 +673,11 @@ namespace Evergine.Bindings.WebGPU
 		ShaderI16 = 196638,
 		ShaderPrimitiveIndex = 196639,
 		ShaderEarlyDepthTest = 196640,
+		Subgroup = 196641,
+		SubgroupVertex = 196642,
+		SubgroupBarrier = 196643,
+		TimestampQueryInsideEncoders = 196644,
+		TimestampQueryInsidePasses = 196645,
 		Force32 = 2147483647,
 	}
 
@@ -664,30 +689,6 @@ namespace Evergine.Bindings.WebGPU
 		Info = 3,
 		Debug = 4,
 		Trace = 5,
-		Force32 = 2147483647,
-	}
-
-	[Flags]
-	public enum WGPUInstanceBackend
-	{
-		All = 0,
-		Vulkan = 1,
-		GL = 2,
-		Metal = 4,
-		DX12 = 8,
-		DX11 = 16,
-		BrowserWebGPU = 32,
-		Primary = 45,
-		Secondary = 18,
-		Force32 = 2147483647,
-	}
-
-	public enum WGPUInstanceFlag
-	{
-		Default = 0,
-		Debug = 1,
-		Validation = 2,
-		DiscardHalLabels = 4,
 		Force32 = 2147483647,
 	}
 

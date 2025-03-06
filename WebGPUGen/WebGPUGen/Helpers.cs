@@ -267,9 +267,9 @@ namespace WebGPUGen
         public static string GetConstantType(string value)
         {
             string constType = "string";
-            if (value.EndsWith("UL", StringComparison.OrdinalIgnoreCase))
+            if (value.EndsWith("UL", StringComparison.OrdinalIgnoreCase) || "UINT64_MAX".Equals(value))
                 constType = "ulong";
-            else if (value.EndsWith("U", StringComparison.OrdinalIgnoreCase))
+            else if (value.EndsWith("U", StringComparison.OrdinalIgnoreCase) || "UINT32_MAX".Equals(value))
                 constType = "uint";
             else if (value.EndsWith("F", StringComparison.OrdinalIgnoreCase))
                 constType = "float";
@@ -280,7 +280,7 @@ namespace WebGPUGen
 
         public static bool SkipConstant(CppMacro constant)
         {
-            string[] skippingValues = new[] { "_H_", "WGPU_EXPORT", "WGPU_SHARED_LIBRARY", "WGPU_IMPLEMENTATION", "_VGPU_EXTERN", "VGPU_API", "_WIN32", "WGPU_SKIP_PROCS" };
+            string[] skippingValues = new[] { "_H_", "WGPU_EXPORT", "WGPU_SHARED_LIBRARY", "WGPU_IMPLEMENTATION", "_VGPU_EXTERN", "VGPU_API", "_WIN32", "WGPU_SKIP_PROCS", "_wgpu_COMMA", "_wgpu_MAKE_INIT_STRUCT", "WGPU_STRING_VIEW_INIT" };
             if (string.IsNullOrEmpty(constant.Value)
                 || skippingValues.Contains(constant.Name))
                 return true;

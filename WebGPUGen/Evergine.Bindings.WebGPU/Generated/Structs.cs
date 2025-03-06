@@ -4,13 +4,20 @@ using System.Runtime.InteropServices;
 namespace Evergine.Bindings.WebGPU
 {
 	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUStringView
+	{
+		public char* data;
+		public ulong length;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUAdapterInfo
 	{
 		public WGPUChainedStructOut* nextInChain;
-		public char* vendor;
-		public char* architecture;
-		public char* device;
-		public char* description;
+		public WGPUStringView vendor;
+		public WGPUStringView architecture;
+		public WGPUStringView device;
+		public WGPUStringView description;
 		public WGPUBackendType backendType;
 		public WGPUAdapterType adapterType;
 		public uint vendorID;
@@ -50,7 +57,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUBufferDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public WGPUBufferUsage usage;
 		public ulong size;
 		public WGPUBool mappedAtCreation;
@@ -69,29 +76,26 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUCommandBufferDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUCommandEncoderDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUCompilationMessage
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* message;
+		public WGPUStringView message;
 		public WGPUCompilationMessageType type;
 		public ulong lineNum;
 		public ulong linePos;
 		public ulong offset;
 		public ulong length;
-		public ulong utf16LinePos;
-		public ulong utf16Offset;
-		public ulong utf16Length;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -106,7 +110,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUConstantEntry
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* key;
+		public WGPUStringView key;
 		public double value;
 	}
 
@@ -119,14 +123,23 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUInstanceDescriptor
+	public unsafe struct WGPUFuture
 	{
-		public WGPUChainedStruct* nextInChain;
+		public ulong id;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUInstanceCapabilities
+	{
+		public WGPUChainedStructOut* nextInChain;
+		public WGPUBool timedWaitAnyEnable;
+		public ulong timedWaitAnyMaxCount;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPULimits
 	{
+		public WGPUChainedStructOut* nextInChain;
 		public uint maxTextureDimension1D;
 		public uint maxTextureDimension2D;
 		public uint maxTextureDimension3D;
@@ -149,7 +162,6 @@ namespace Evergine.Bindings.WebGPU
 		public ulong maxBufferSize;
 		public uint maxVertexAttributes;
 		public uint maxVertexBufferArrayStride;
-		public uint maxInterStageShaderComponents;
 		public uint maxInterStageShaderVariables;
 		public uint maxColorAttachments;
 		public uint maxColorAttachmentBytesPerSample;
@@ -182,16 +194,9 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUPipelineLayoutDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public ulong bindGroupLayoutCount;
 		public WGPUBindGroupLayout* bindGroupLayouts;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUPrimitiveDepthClipControl
-	{
-		public WGPUChainedStruct chain;
-		public WGPUBool unclippedDepth;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -202,13 +207,14 @@ namespace Evergine.Bindings.WebGPU
 		public WGPUIndexFormat stripIndexFormat;
 		public WGPUFrontFace frontFace;
 		public WGPUCullMode cullMode;
+		public WGPUBool unclippedDepth;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUQuerySetDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public WGPUQueryType type;
 		public uint count;
 	}
@@ -217,21 +223,21 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUQueueDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPURenderBundleDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPURenderBundleEncoderDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public ulong colorFormatCount;
 		public WGPUTextureFormat* colorFormats;
 		public WGPUTextureFormat depthStencilFormat;
@@ -255,7 +261,7 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPURenderPassDescriptorMaxDrawCount
+	public unsafe struct WGPURenderPassMaxDrawCount
 	{
 		public WGPUChainedStruct chain;
 		public ulong maxDrawCount;
@@ -273,10 +279,11 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPURequestAdapterOptions
 	{
 		public WGPUChainedStruct* nextInChain;
-		public WGPUSurface compatibleSurface;
+		public WGPUFeatureLevel featureLevel;
 		public WGPUPowerPreference powerPreference;
-		public WGPUBackendType backendType;
 		public WGPUBool forceFallbackAdapter;
+		public WGPUBackendType backendType;
+		public WGPUSurface compatibleSurface;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -290,7 +297,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUSamplerDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public WGPUAddressMode addressModeU;
 		public WGPUAddressMode addressModeV;
 		public WGPUAddressMode addressModeW;
@@ -304,15 +311,14 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUShaderModuleCompilationHint
+	public unsafe struct WGPUShaderModuleDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* entryPoint;
-		public WGPUPipelineLayout layout;
+		public WGPUStringView label;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUShaderModuleSPIRVDescriptor
+	public unsafe struct WGPUShaderSourceSPIRV
 	{
 		public WGPUChainedStruct chain;
 		public uint codeSize;
@@ -320,10 +326,10 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUShaderModuleWGSLDescriptor
+	public unsafe struct WGPUShaderSourceWGSL
 	{
 		public WGPUChainedStruct chain;
-		public char* code;
+		public WGPUStringView code;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -342,6 +348,20 @@ namespace Evergine.Bindings.WebGPU
 		public WGPUStorageTextureAccess access;
 		public WGPUTextureFormat format;
 		public WGPUTextureViewDimension viewDimension;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUSupportedFeatures
+	{
+		public ulong featureCount;
+		public WGPUFeatureName* features;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUSupportedWGSLLanguageFeatures
+	{
+		public ulong featureCount;
+		public WGPUWGSLLanguageFeatureName* features;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -364,11 +384,11 @@ namespace Evergine.Bindings.WebGPU
 		public WGPUDevice device;
 		public WGPUTextureFormat format;
 		public WGPUTextureUsage usage;
+		public uint width;
+		public uint height;
 		public ulong viewFormatCount;
 		public WGPUTextureFormat* viewFormats;
 		public WGPUCompositeAlphaMode alphaMode;
-		public uint width;
-		public uint height;
 		public WGPUPresentMode presentMode;
 	}
 
@@ -376,32 +396,25 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUSurfaceDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSurfaceDescriptorFromAndroidNativeWindow
+	public unsafe struct WGPUSurfaceSourceAndroidNativeWindow
 	{
 		public WGPUChainedStruct chain;
 		public void* window;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSurfaceDescriptorFromCanvasHTMLSelector
-	{
-		public WGPUChainedStruct chain;
-		public char* selector;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSurfaceDescriptorFromMetalLayer
+	public unsafe struct WGPUSurfaceSourceMetalLayer
 	{
 		public WGPUChainedStruct chain;
 		public void* layer;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSurfaceDescriptorFromWaylandSurface
+	public unsafe struct WGPUSurfaceSourceWaylandSurface
 	{
 		public WGPUChainedStruct chain;
 		public void* display;
@@ -409,7 +422,7 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSurfaceDescriptorFromWindowsHWND
+	public unsafe struct WGPUSurfaceSourceWindowsHWND
 	{
 		public WGPUChainedStruct chain;
 		public void* hinstance;
@@ -417,7 +430,7 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSurfaceDescriptorFromXcbWindow
+	public unsafe struct WGPUSurfaceSourceXCBWindow
 	{
 		public WGPUChainedStruct chain;
 		public void* connection;
@@ -425,7 +438,7 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSurfaceDescriptorFromXlibWindow
+	public unsafe struct WGPUSurfaceSourceXlibWindow
 	{
 		public WGPUChainedStruct chain;
 		public void* display;
@@ -435,9 +448,17 @@ namespace Evergine.Bindings.WebGPU
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUSurfaceTexture
 	{
+		public WGPUChainedStructOut* nextInChain;
 		public WGPUTexture texture;
-		public WGPUBool suboptimal;
 		public WGPUSurfaceGetCurrentTextureStatus status;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUTexelCopyBufferLayout
+	{
+		public ulong offset;
+		public uint bytesPerRow;
+		public uint rowsPerImage;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -450,19 +471,10 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUTextureDataLayout
-	{
-		public WGPUChainedStruct* nextInChain;
-		public ulong offset;
-		public uint bytesPerRow;
-		public uint rowsPerImage;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUTextureViewDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public WGPUTextureFormat format;
 		public WGPUTextureViewDimension dimension;
 		public uint baseMipLevel;
@@ -470,14 +482,7 @@ namespace Evergine.Bindings.WebGPU
 		public uint baseArrayLayer;
 		public uint arrayLayerCount;
 		public WGPUTextureAspect aspect;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUUncapturedErrorCallbackInfo
-	{
-		public WGPUChainedStruct* nextInChain;
-		public delegate* unmanaged<WGPUErrorType, char*, void*, void> callback;
-		public void* userdata;
+		public WGPUTextureUsage usage;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -492,7 +497,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUBindGroupDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public WGPUBindGroupLayout layout;
 		public ulong entryCount;
 		public WGPUBindGroupEntry* entries;
@@ -529,7 +534,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUComputePassDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public WGPUComputePassTimestampWrites* timestampWrites;
 	}
 
@@ -538,7 +543,7 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public WGPUTextureFormat format;
-		public WGPUBool depthWriteEnabled;
+		public WGPUOptionalBool depthWriteEnabled;
 		public WGPUCompareFunction depthCompare;
 		public WGPUStencilFaceState stencilFront;
 		public WGPUStencilFaceState stencilBack;
@@ -550,21 +555,30 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUImageCopyBuffer
+	public unsafe struct WGPUDeviceDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public WGPUTextureDataLayout layout;
-		public WGPUBuffer buffer;
+		public WGPUStringView label;
+		public ulong requiredFeatureCount;
+		public WGPUFeatureName* requiredFeatures;
+		public WGPULimits* requiredLimits;
+		public WGPUQueueDescriptor defaultQueue;
+		public WGPUDeviceLostCallbackInfo deviceLostCallbackInfo;
+		public WGPUUncapturedErrorCallbackInfo uncapturedErrorCallbackInfo;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUImageCopyTexture
+	public unsafe struct WGPUFutureWaitInfo
+	{
+		public WGPUFuture future;
+		public WGPUBool completed;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUInstanceDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public WGPUTexture texture;
-		public uint mipLevel;
-		public WGPUOrigin3D origin;
-		public WGPUTextureAspect aspect;
+		public WGPUInstanceCapabilities features;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -572,7 +586,7 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public WGPUShaderModule module;
-		public char* entryPoint;
+		public WGPUStringView entryPoint;
 		public ulong constantCount;
 		public WGPUConstantEntry* constants;
 	}
@@ -590,33 +604,26 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPURequiredLimits
+	public unsafe struct WGPUTexelCopyBufferInfo
 	{
-		public WGPUChainedStruct* nextInChain;
-		public WGPULimits limits;
+		public WGPUTexelCopyBufferLayout layout;
+		public WGPUBuffer buffer;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUShaderModuleDescriptor
+	public unsafe struct WGPUTexelCopyTextureInfo
 	{
-		public WGPUChainedStruct* nextInChain;
-		public char* label;
-		public ulong hintCount;
-		public WGPUShaderModuleCompilationHint* hints;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSupportedLimits
-	{
-		public WGPUChainedStructOut* nextInChain;
-		public WGPULimits limits;
+		public WGPUTexture texture;
+		public uint mipLevel;
+		public WGPUOrigin3D origin;
+		public WGPUTextureAspect aspect;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUTextureDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public WGPUTextureUsage usage;
 		public WGPUTextureDimension dimension;
 		public WGPUExtent3D size;
@@ -630,8 +637,8 @@ namespace Evergine.Bindings.WebGPU
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUVertexBufferLayout
 	{
-		public ulong arrayStride;
 		public WGPUVertexStepMode stepMode;
+		public ulong arrayStride;
 		public ulong attributeCount;
 		public WGPUVertexAttribute* attributes;
 	}
@@ -640,7 +647,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUBindGroupLayoutDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public ulong entryCount;
 		public WGPUBindGroupLayoutEntry* entries;
 	}
@@ -658,30 +665,16 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUComputePipelineDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public WGPUPipelineLayout layout;
 		public WGPUProgrammableStageDescriptor compute;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUDeviceDescriptor
-	{
-		public WGPUChainedStruct* nextInChain;
-		public char* label;
-		public ulong requiredFeatureCount;
-		public WGPUFeatureName* requiredFeatures;
-		public WGPURequiredLimits* requiredLimits;
-		public WGPUQueueDescriptor defaultQueue;
-		public delegate* unmanaged<WGPUDeviceLostReason, char*, void*, void> deviceLostCallback;
-		public void* deviceLostUserdata;
-		public WGPUUncapturedErrorCallbackInfo uncapturedErrorCallbackInfo;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPURenderPassDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public ulong colorAttachmentCount;
 		public WGPURenderPassColorAttachment* colorAttachments;
 		public WGPURenderPassDepthStencilAttachment* depthStencilAttachment;
@@ -694,7 +687,7 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public WGPUShaderModule module;
-		public char* entryPoint;
+		public WGPUStringView entryPoint;
 		public ulong constantCount;
 		public WGPUConstantEntry* constants;
 		public ulong bufferCount;
@@ -706,7 +699,7 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct* nextInChain;
 		public WGPUShaderModule module;
-		public char* entryPoint;
+		public WGPUStringView entryPoint;
 		public ulong constantCount;
 		public WGPUConstantEntry* constants;
 		public ulong targetCount;
@@ -717,13 +710,112 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPURenderPipelineDescriptor
 	{
 		public WGPUChainedStruct* nextInChain;
-		public char* label;
+		public WGPUStringView label;
 		public WGPUPipelineLayout layout;
 		public WGPUVertexState vertex;
 		public WGPUPrimitiveState primitive;
 		public WGPUDepthStencilState* depthStencil;
 		public WGPUMultisampleState multisample;
 		public WGPUFragmentState* fragment;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUBufferMapCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public WGPUCallbackMode mode;
+		public delegate* unmanaged<WGPUMapAsyncStatus, WGPUStringView, void*, void*, void> callback;
+		public void* userdata1;
+		public void* userdata2;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUCompilationInfoCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public WGPUCallbackMode mode;
+		public delegate* unmanaged<WGPUCompilationInfoRequestStatus, WGPUCompilationInfo*, void*, void*, void> callback;
+		public void* userdata1;
+		public void* userdata2;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUCreateComputePipelineAsyncCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public WGPUCallbackMode mode;
+		public delegate* unmanaged<WGPUCreatePipelineAsyncStatus, WGPUComputePipeline, WGPUStringView, void*, void*, void> callback;
+		public void* userdata1;
+		public void* userdata2;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUCreateRenderPipelineAsyncCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public WGPUCallbackMode mode;
+		public delegate* unmanaged<WGPUCreatePipelineAsyncStatus, WGPURenderPipeline, WGPUStringView, void*, void*, void> callback;
+		public void* userdata1;
+		public void* userdata2;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUDeviceLostCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public WGPUCallbackMode mode;
+		public delegate* unmanaged<WGPUDevice*, WGPUDeviceLostReason, WGPUStringView, void*, void*, void> callback;
+		public void* userdata1;
+		public void* userdata2;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUPopErrorScopeCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public WGPUCallbackMode mode;
+		public delegate* unmanaged<WGPUPopErrorScopeStatus, WGPUErrorType, WGPUStringView, void*, void*, void> callback;
+		public void* userdata1;
+		public void* userdata2;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUQueueWorkDoneCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public WGPUCallbackMode mode;
+		public delegate* unmanaged<WGPUQueueWorkDoneStatus, void*, void*, void> callback;
+		public void* userdata1;
+		public void* userdata2;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPURequestAdapterCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public WGPUCallbackMode mode;
+		public delegate* unmanaged<WGPURequestAdapterStatus, WGPUAdapter, WGPUStringView, void*, void*, void> callback;
+		public void* userdata1;
+		public void* userdata2;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPURequestDeviceCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public WGPUCallbackMode mode;
+		public delegate* unmanaged<WGPURequestDeviceStatus, WGPUDevice, WGPUStringView, void*, void*, void> callback;
+		public void* userdata1;
+		public void* userdata2;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUUncapturedErrorCallbackInfo
+	{
+		public WGPUChainedStruct* nextInChain;
+		public delegate* unmanaged<WGPUDevice*, WGPUErrorType, WGPUStringView, void*, void*, void> callback;
+		public void* userdata1;
+		public void* userdata2;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -745,39 +837,26 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct chain;
 		public WGPUInstanceBackend backends;
-		public WGPUInstance flags;
+		public WGPUInstanceFlag flags;
 		public WGPUDx12Compiler dx12ShaderCompiler;
 		public WGPUGles3MinorVersion gles3MinorVersion;
-		public char* dxilPath;
-		public char* dxcPath;
+		public WGPUStringView dxilPath;
+		public WGPUStringView dxcPath;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUDeviceExtras
 	{
 		public WGPUChainedStruct chain;
-		public char* tracePath;
+		public WGPUStringView tracePath;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUNativeLimits
 	{
+		public WGPUChainedStructOut chain;
 		public uint maxPushConstantSize;
 		public uint maxNonSamplerBindings;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPURequiredLimitsExtras
-	{
-		public WGPUChainedStruct chain;
-		public WGPUNativeLimits limits;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUSupportedLimitsExtras
-	{
-		public WGPUChainedStructOut chain;
-		public WGPUNativeLimits limits;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -797,17 +876,10 @@ namespace Evergine.Bindings.WebGPU
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public unsafe struct WGPUWrappedSubmissionIndex
-	{
-		public WGPUQueue queue;
-		public ulong submissionIndex;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct WGPUShaderDefine
 	{
-		public char* name;
-		public char* value;
+		public WGPUStringView name;
+		public WGPUStringView value;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -815,9 +887,17 @@ namespace Evergine.Bindings.WebGPU
 	{
 		public WGPUChainedStruct chain;
 		public WGPUShaderStage stage;
-		public char* code;
+		public WGPUStringView code;
 		public uint defineCount;
 		public WGPUShaderDefine* defines;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct WGPUShaderModuleDescriptorSpirV
+	{
+		public WGPUStringView label;
+		public uint sourceSize;
+		public uint* source;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -826,7 +906,6 @@ namespace Evergine.Bindings.WebGPU
 		public ulong numAllocated;
 		public ulong numKeptFromUser;
 		public ulong numReleasedFromUser;
-		public ulong numError;
 		public ulong elementSize;
 	}
 
@@ -844,6 +923,7 @@ namespace Evergine.Bindings.WebGPU
 		public WGPURegistryReport renderBundles;
 		public WGPURegistryReport renderPipelines;
 		public WGPURegistryReport computePipelines;
+		public WGPURegistryReport pipelineCaches;
 		public WGPURegistryReport querySets;
 		public WGPURegistryReport buffers;
 		public WGPURegistryReport textures;
@@ -855,11 +935,7 @@ namespace Evergine.Bindings.WebGPU
 	public unsafe struct WGPUGlobalReport
 	{
 		public WGPURegistryReport surfaces;
-		public WGPUBackendType backendType;
-		public WGPUHubReport vulkan;
-		public WGPUHubReport metal;
-		public WGPUHubReport dx12;
-		public WGPUHubReport gl;
+		public WGPUHubReport hub;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]

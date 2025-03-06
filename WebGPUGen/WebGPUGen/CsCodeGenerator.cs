@@ -40,6 +40,7 @@ namespace WebGPUGen
             GenerateConstants(compilation, outputPath);
             GenerateDelegates(compilation, outputPath);
             GenerateEnums(compilation, outputPath);
+            GenerateFlags(compilation, outputPath);
             GenerateStructs(compilation, outputPath);
             GenerateCommmands(compilation, outputPath);
             GeneratedHandles(compilation, outputPath);
@@ -57,15 +58,24 @@ namespace WebGPUGen
 
                 foreach (var constant in compilation.Macros)
                 {
-                    string constantValue = Helpers.NormalizeConstantValue(constant.Value);
+                    string noramlizedValue = Helpers.NormalizeConstantValue(constant.Value);
 
                     if(Helpers.SkipConstant(constant)) 
                         continue;
-
-                    if(constant.Name == "WGPU_WHOLE_MAP_SIZE")
-                        file.WriteLine($"\t\tpublic static readonly nuint WGPU_WHOLE_MAP_SIZE = nuint.MaxValue;");
+                    
+                    if(constant.Name == "WGPU_WHOLE_MAP_SIZE" || constant.Name == "WGPU_STRLEN")
+                        file.WriteLine($"\t\tpublic static readonly nuint {constant.Name} = nuint.MaxValue;");
                     else
-                        file.WriteLine($"\t\tpublic const {Helpers.GetConstantType(constantValue)} {constant.Name} = {constantValue};");
+                    {
+                        var constantValue = noramlizedValue switch
+                        {
+                            "UINT32_MAX" => "uint.MaxValue",
+                            "UINT64_MAX" => "ulong.MaxValue",
+                            _ => noramlizedValue
+                        };
+                        
+                        file.WriteLine($"\t\tpublic const {Helpers.GetConstantType(noramlizedValue)} {constant.Name} = {constantValue};");
+                    }
                 }
 
                 file.WriteLine("\t}");
@@ -268,6 +278,67 @@ namespace WebGPUGen
                     file.WriteLine("\t}\n");
                 }
 
+                file.WriteLine("}");
+            }
+        }
+        
+        public void GenerateFlags(CppCompilation compilation, string outputPath)
+        {
+            Debug.WriteLine("Generating Flags...");
+
+            using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Flags.cs")))
+            {
+                file.WriteLine("using System;\n");
+                file.WriteLine("namespace Evergine.Bindings.WebGPU");
+                file.WriteLine("{");
+
+                // Gather all types that are typedefs of WGPUFlags
+                var flagDict = new Dictionary<CppType, List<CppField>>();
+                
+                foreach (var cppTypedef in compilation.Typedefs)
+                {
+                    if (cppTypedef.ElementType.TypeKind == CppTypeKind.Typedef && ( (CppTypedef)cppTypedef.ElementType).Name == "WGPUFlags")
+                    {
+                        flagDict[cppTypedef] = [];
+                    }
+                }
+
+                foreach (var field in compilation.Fields)
+                {
+                    if (field.Type.TypeKind == CppTypeKind.Qualified)
+                    {
+                        var elemType = ((CppQualifiedType)field.Type).ElementType;
+
+                        if (flagDict.ContainsKey(elemType))
+                        {
+                            flagDict[elemType].Add(field);
+                        }
+                    }
+                }
+
+                foreach (var flags in flagDict)
+                {
+                    var flagType = (CppTypedef)flags.Key;
+                    
+                    file.WriteLine("\t[Flags]");
+                    
+                    file.WriteLine($"\tpublic enum {flagType.Name} : ulong");
+                    file.WriteLine("\t{");
+
+                    foreach (var field in flags.Value)
+                    {
+                        string cleanMemberName = field.Name.Split('_')[1];
+                        if (char.IsNumber(cleanMemberName, 0))
+                        {
+                            cleanMemberName = $"_{cleanMemberName}";
+                        }
+                        
+                        file.WriteLine($"\t\t{cleanMemberName} = {field.InitValue},");
+                    }
+                    
+                    file.WriteLine("\t}\n");
+                }
+                
                 file.WriteLine("}");
             }
         }
